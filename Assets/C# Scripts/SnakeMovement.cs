@@ -119,13 +119,25 @@ public class SnakeMovement : MonoBehaviour
         }
     }
 
-    void AddBodyPart()
+    public void AddBodyPart()
     {
         Vector3 newPartPosition = snakeBodyParts[snakeBodyParts.Count - 1].transform.position;
         Debug.Log("Space pressed");
         Transform partToadd = Instantiate(bodyPart, newPartPosition, transform.rotation).transform;
         StartCoroutine(DelayForCollisions(partToadd));
         snakeBodyParts.Add(partToadd);
+    }
+
+    public void RemoveBodyPart()
+    {
+        GameObject tailDestroy = snakeBodyParts[snakeBodyParts.Count - 1].gameObject;
+        snakeBodyParts.Remove(snakeBodyParts[snakeBodyParts.Count - 1]);
+        Destroy(tailDestroy);
+    }
+
+    public int ReturnSnakeLength()
+    {
+        return snakeBodyParts.Count;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
