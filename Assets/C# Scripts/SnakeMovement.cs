@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class SnakeMovement : MonoBehaviour
 {
-    private float timer;
-    private Vector3 leftRotation, rightRotation, upRotation, downRotation;
-    private List<Transform> snakeBodyParts = new List<Transform>();
     [Header("Speed of Snake")]
     [SerializeField] private int speed;
     [Header("Body Part")]
     [SerializeField] private GameObject bodyPart;
+    [Header("Score Manager")]
+    [SerializeField] private ScoreManager scoreManager;
+    private float timer;
+    private Vector3 leftRotation, rightRotation, upRotation, downRotation;
+    private List<Transform> snakeBodyParts = new List<Transform>();
+    private int score;
     private void Start()
     {
         InitializeGame();
@@ -89,11 +92,6 @@ public class SnakeMovement : MonoBehaviour
                 transform.eulerAngles = rightRotation;
             }
         }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            AddBodyPart();
-        }
     }
 
     void WrapScript()
@@ -140,11 +138,33 @@ public class SnakeMovement : MonoBehaviour
         return snakeBodyParts.Count;
     }
 
+    public void AddScore()
+    {
+        score += 10;
+        scoreManager.ScoreDisplay(score);
+    }
+
+    public void SubtractScore()
+    {
+        score -= 10;
+        if (score <= 0)
+        {
+            score = 0;
+        }
+        scoreManager.ScoreDisplay(score);
+    }
+
+    public int ReturnScore()
+    {
+        return score;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == gameObject.layer)
         {
-            Time.timeScale = 0;
+            scoreManager.GameOver();
+            Destroy(gameObject, 0.2f);
         }
     }
 
