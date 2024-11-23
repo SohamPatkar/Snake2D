@@ -4,8 +4,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("Consumables")]
     [SerializeField] private GameObject[] consumables;
-    [Header("Snake Movement Script")]
-    [SerializeField] private SnakeMovement snakeMovement;
+    private SnakeMovement snakeMovement;
     private Vector3 randomSpawnCoord;
     private GameObject consumableToSpawn;
     private static GameManager instance;
@@ -15,7 +14,6 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -27,12 +25,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InvokeRepeating("SpawnConsumables", 3, 2);
+        snakeMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<SnakeMovement>();
     }
 
     private void SpawnConsumables()
     {
-        randomSpawnCoord.x = Random.Range(-5, 5);
-        randomSpawnCoord.y = Random.Range(-5, 5);
+        randomSpawnCoord.x = Random.Range(-7, 7);
+        randomSpawnCoord.y = Random.Range(-4, 4);
         randomSpawnCoord.z = 0;
 
         int i = Random.Range(0, consumables.Length);
