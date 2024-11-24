@@ -18,6 +18,6 @@ public class MainMenu : MonoBehaviour
 
     void CoopButtonClicked()
     {
-        SceneManager.LoadScene("SinglePlayer");
+        SceneManager.LoadScene("Coop");
     }
 }

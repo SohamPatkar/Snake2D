@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3889037806728750426}
   - component: {fileID: -5370356727875579081}
   m_Layer: 6
-  m_Name: Snake
-  m_TagString: Untagged
+  m_Name: Player One
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   bodyPart: {fileID: 9086282169469654981, guid: 3096690c596425843bb4e8ac49db8eed, type: 3}
+  scoreManager: {fileID: 0}
 --- !u!61 &-5370356727875579081
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -17,5 +17,13 @@ public class MassBurner : MonoBehaviour
             snakeMovement.SubtractScore();
             Destroy(gameObject);
         }
+        else if (other.gameObject.GetComponent<PlayerTwo>() != null)
+        {
+            Debug.Log("Collision");
+            PlayerTwo playerTwo = other.gameObject.GetComponent<PlayerTwo>();
+            playerTwo.RemoveBodyPart();
+            playerTwo.SubtractScore();
+            Destroy(gameObject);
+        }
     }
 }

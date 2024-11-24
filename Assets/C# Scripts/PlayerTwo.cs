@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeMovement : MonoBehaviour
+public class PlayerTwo : MonoBehaviour
 {
     [Header("Speed of Snake")]
     [SerializeField] private int speed;
@@ -61,7 +61,7 @@ public class SnakeMovement : MonoBehaviour
             timer = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (transform.eulerAngles.z != 0)
             {
@@ -69,7 +69,7 @@ public class SnakeMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (transform.eulerAngles.z != 270)
             {
@@ -77,7 +77,7 @@ public class SnakeMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             if (transform.eulerAngles.z != 90)
             {
@@ -85,7 +85,7 @@ public class SnakeMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             if (transform.eulerAngles.z != 180)
             {
@@ -141,7 +141,7 @@ public class SnakeMovement : MonoBehaviour
     public void AddScore()
     {
         score += 10;
-        scoreManager.ScoreDisplay(score);
+        scoreManager.PlayerTwoScoreDisplay(score);
     }
 
     public void SubtractScore()
@@ -159,14 +159,6 @@ public class SnakeMovement : MonoBehaviour
         return score;
     }
 
-    public void EmptyList()
-    {
-        foreach (var part in snakeBodyParts)
-        {
-            Destroy(part.gameObject);
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == gameObject.layer)
@@ -174,12 +166,20 @@ public class SnakeMovement : MonoBehaviour
             scoreManager.GameOver();
             Destroy(gameObject, 0.2f);
         }
-        else if (other.gameObject.layer == 8)
+        else if (other.gameObject.layer == 6)
         {
-            PlayerTwo playerTwo = GameObject.FindGameObjectWithTag("PlayerTwo").GetComponent<PlayerTwo>();
-            playerTwo.EmptyList();
+            SnakeMovement snake = GameObject.FindGameObjectWithTag("Player").GetComponent<SnakeMovement>();
+            snake.EmptyList();
             scoreManager.PlayerWon(gameObject);
-            Destroy(GameObject.FindGameObjectWithTag("PlayerTwo").gameObject);
+            Destroy(GameObject.FindGameObjectWithTag("Player").gameObject);
+        }
+    }
+
+    public void EmptyList()
+    {
+        foreach (var part in snakeBodyParts)
+        {
+            Destroy(part.gameObject);
         }
     }
 

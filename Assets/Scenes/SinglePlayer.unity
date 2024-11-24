@@ -1003,6 +1003,7 @@ MonoBehaviour:
   consumables:
   - {fileID: 6836896891894758540, guid: d97a453875320fd4d89aef9c61523f30, type: 3}
   - {fileID: 7637754432476394963, guid: bd400ba5fd2444243b6f1c169c17fd9d, type: 3}
+  spawnRate: 3
 --- !u!1 &1813776744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,6 +1185,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 686431478}
+  scoreTwo: {fileID: 0}
+  playerWon: {fileID: 0}
   gameOverScreen: {fileID: 1179384090}
 --- !u!1 &2084055541
 GameObject:
