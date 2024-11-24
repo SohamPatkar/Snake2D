@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerTwo : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class PlayerTwo : MonoBehaviour
     [SerializeField] private GameObject bodyPart;
     [Header("Score Manager")]
     [SerializeField] private ScoreManager scoreManager;
-    private float timer;
+    private float timer, scoreToadd;
     private Vector3 leftRotation, rightRotation, upRotation, downRotation;
     private List<Transform> snakeBodyParts = new List<Transform>();
     private int score;
@@ -38,6 +39,7 @@ public class PlayerTwo : MonoBehaviour
         upRotation = new Vector3(0, 0, 90);
         downRotation = new Vector3(0, 0, 270);
         speed = 1;
+        scoreToadd = 10;
         snakeBodyParts.Add(transform);
     }
 
@@ -126,6 +128,16 @@ public class PlayerTwo : MonoBehaviour
         snakeBodyParts.Add(partToadd);
     }
 
+    public void Shield()
+    {
+        foreach (Transform part in snakeBodyParts)
+        {
+            BoxCollider2D box = part.gameObject.GetComponent<BoxCollider2D>();
+            box.excludeLayers = 1 << 0;
+            StartCoroutine(DelayForShield(box));
+        }
+    }
+
     public void RemoveBodyPart()
     {
         GameObject tailDestroy = snakeBodyParts[snakeBodyParts.Count - 1].gameObject;
@@ -138,9 +150,15 @@ public class PlayerTwo : MonoBehaviour
         return snakeBodyParts.Count;
     }
 
+    public void ScoreToAdd()
+    {
+        scoreToadd = scoreToadd * 2;
+        StartCoroutine(ScoreMultiplierCooldown());
+    }
+
     public void AddScore()
     {
-        score += 10;
+        score += (int)scoreToadd;
         scoreManager.PlayerTwoScoreDisplay(score);
     }
 
@@ -181,6 +199,18 @@ public class PlayerTwo : MonoBehaviour
         {
             Destroy(part.gameObject);
         }
+    }
+
+    IEnumerator ScoreMultiplierCooldown()
+    {
+        yield return new WaitForSeconds(5f);
+        scoreToadd = 10;
+    }
+
+    IEnumerator DelayForShield(BoxCollider2D boxCollider)
+    {
+        yield return new WaitForSeconds(5f);
+        boxCollider.excludeLayers = 1 << 3;
     }
 
     IEnumerator DelayForCollisions(Transform part)

@@ -10,7 +10,7 @@ public class SnakeMovement : MonoBehaviour
     [SerializeField] private GameObject bodyPart;
     [Header("Score Manager")]
     [SerializeField] private ScoreManager scoreManager;
-    private float timer;
+    private float timer, scoreToadd;
     private Vector3 leftRotation, rightRotation, upRotation, downRotation;
     private List<Transform> snakeBodyParts = new List<Transform>();
     private int score;
@@ -38,6 +38,7 @@ public class SnakeMovement : MonoBehaviour
         upRotation = new Vector3(0, 0, 90);
         downRotation = new Vector3(0, 0, 270);
         speed = 1;
+        scoreToadd = 10;
         snakeBodyParts.Add(transform);
     }
 
@@ -133,14 +134,30 @@ public class SnakeMovement : MonoBehaviour
         Destroy(tailDestroy);
     }
 
+    public void Shield()
+    {
+        foreach (Transform part in snakeBodyParts)
+        {
+            BoxCollider2D box = part.gameObject.GetComponent<BoxCollider2D>();
+            box.excludeLayers = 1 << 0;
+            StartCoroutine(DelayForShield(box));
+        }
+    }
+
     public int ReturnSnakeLength()
     {
         return snakeBodyParts.Count;
     }
 
+    public void ScoreToAdd()
+    {
+        scoreToadd = scoreToadd * 2;
+        StartCoroutine(ScoreMultiplierCooldown());
+    }
+
     public void AddScore()
     {
-        score += 10;
+        score += (int)scoreToadd;
         scoreManager.ScoreDisplay(score);
     }
 
@@ -181,6 +198,19 @@ public class SnakeMovement : MonoBehaviour
             scoreManager.PlayerWon(gameObject);
             Destroy(GameObject.FindGameObjectWithTag("PlayerTwo").gameObject);
         }
+    }
+
+    IEnumerator ScoreMultiplierCooldown()
+    {
+        yield return new WaitForSeconds(5f);
+        scoreToadd = 10;
+    }
+
+    IEnumerator DelayForShield(BoxCollider2D boxCollider)
+    {
+        yield return new WaitForSeconds(5f);
+        boxCollider.excludeLayers = 1 << 3;
+
     }
 
     IEnumerator DelayForCollisions(Transform part)
