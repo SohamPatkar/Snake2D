@@ -17,5 +17,13 @@ public class MassGainer : MonoBehaviour
             snakeMovement.AddScore();
             Destroy(gameObject);
         }
+        else if (other.gameObject.GetComponent<PlayerTwo>() != null)
+        {
+            Debug.Log("Collision");
+            PlayerTwo playerTwo = other.gameObject.GetComponent<PlayerTwo>();
+            playerTwo.AddBodyPart();
+            playerTwo.AddScore();
+            Destroy(gameObject);
+        }
     }
 }
