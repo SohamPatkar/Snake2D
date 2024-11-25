@@ -12,6 +12,7 @@ public class MassBurner : MonoBehaviour
         if (other.gameObject.GetComponent<SnakeMovement>() != null)
         {
             Debug.Log("Collision");
+            SoundManager.Instance.PlaySfx(SoundType.Eaten);
             SnakeMovement snakeMovement = other.gameObject.GetComponent<SnakeMovement>();
             snakeMovement.RemoveBodyPart();
             snakeMovement.SubtractScore();
@@ -20,6 +21,7 @@ public class MassBurner : MonoBehaviour
         else if (other.gameObject.GetComponent<PlayerTwo>() != null)
         {
             Debug.Log("Collision");
+            SoundManager.Instance.PlaySfx(SoundType.Eaten);
             PlayerTwo playerTwo = other.gameObject.GetComponent<PlayerTwo>();
             playerTwo.RemoveBodyPart();
             playerTwo.SubtractScore();

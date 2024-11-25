@@ -182,6 +182,8 @@ public class PlayerTwo : MonoBehaviour
         if (other.gameObject.layer == gameObject.layer)
         {
             scoreManager.GameOver();
+            SoundManager.Instance.PlaySfx(SoundType.Death);
+            Time.timeScale = 0;
             Destroy(gameObject, 0.2f);
         }
         else if (other.gameObject.layer == 6)
@@ -189,6 +191,7 @@ public class PlayerTwo : MonoBehaviour
             SnakeMovement snake = GameObject.FindGameObjectWithTag("Player").GetComponent<SnakeMovement>();
             snake.EmptyList();
             scoreManager.PlayerWon(gameObject);
+            SoundManager.Instance.PlaySfx(SoundType.Death);
             Destroy(GameObject.FindGameObjectWithTag("Player").gameObject);
         }
     }

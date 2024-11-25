@@ -13,11 +13,13 @@ public class MainMenu : MonoBehaviour
 
     void PlayButtonClicked()
     {
+        SoundManager.Instance.PlaySfx(SoundType.ButtonClick);
         SceneManager.LoadScene("SinglePlayer");
     }
 
     void CoopButtonClicked()
     {
+        SoundManager.Instance.PlaySfx(SoundType.ButtonClick);
         SceneManager.LoadScene("Coop");
     }
 }
