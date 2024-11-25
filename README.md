@@ -1,4 +1,5 @@
 Snake 2D game
+
 Implemented:
 - Shield Functionality
 - Score Multiplier
