@@ -5,8 +5,10 @@ public class GameManager : MonoBehaviour
 {
     [Header("Consumables")]
     [SerializeField] private GameObject[] consumables, powerups;
+
     [Header("Spawn Variables")]
     [SerializeField] private int spawnRate, spawnRatepowerups;
+
     private SnakeMovement snakeMovement;
     private Vector3 randomSpawnCoord;
     private GameObject consumableToSpawn, powerupsToSpawn;
@@ -28,7 +30,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InvokeRepeating("SpawnConsumables", 3, spawnRate);
-        InvokeRepeating("SpawnPowerUps", 3, spawnRatepowerups);
+        if (SceneManager.GetActiveScene().name == "Coop")
+        {
+            InvokeRepeating("SpawnPowerUps", 3, spawnRatepowerups);
+        }
         snakeMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<SnakeMovement>();
     }
 

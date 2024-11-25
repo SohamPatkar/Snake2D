@@ -189,6 +189,7 @@ public class SnakeMovement : MonoBehaviour
         if (other.gameObject.layer == gameObject.layer)
         {
             scoreManager.GameOver();
+            SoundManager.Instance.PlaySfx(SoundType.Death);
             Destroy(gameObject, 0.2f);
         }
         else if (other.gameObject.layer == 8)
@@ -196,6 +197,7 @@ public class SnakeMovement : MonoBehaviour
             PlayerTwo playerTwo = GameObject.FindGameObjectWithTag("PlayerTwo").GetComponent<PlayerTwo>();
             playerTwo.EmptyList();
             scoreManager.PlayerWon(gameObject);
+            SoundManager.Instance.PlaySfx(SoundType.Death);
             Destroy(GameObject.FindGameObjectWithTag("PlayerTwo").gameObject);
         }
     }
