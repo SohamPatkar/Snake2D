@@ -11,6 +11,7 @@ public class SnakeMovement : MonoBehaviour
     [Header("Score Manager")]
     [SerializeField] private ScoreManager scoreManager;
     private float timer, scoreToadd;
+    private bool canMove;
     private Vector3 leftRotation, rightRotation, upRotation, downRotation;
     private List<Transform> snakeBodyParts = new List<Transform>();
     private int score;
@@ -46,6 +47,8 @@ public class SnakeMovement : MonoBehaviour
     {
         if (Mathf.Round(timer) == 1)
         {
+            canMove = true;
+
             Vector3 previousPosition = transform.position;
 
             transform.Translate(Vector3.right * speed);
@@ -61,38 +64,45 @@ public class SnakeMovement : MonoBehaviour
             }
             timer = 0;
         }
-
-        if (Input.GetKeyDown(KeyCode.A))
+        if (canMove)
         {
-            if (transform.eulerAngles.z != 0)
+            if (Input.GetKeyDown(KeyCode.A))
             {
-                transform.eulerAngles = leftRotation;
+                if (transform.eulerAngles.z != 0)
+                {
+                    transform.eulerAngles = leftRotation;
+                    canMove = false;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                if (transform.eulerAngles.z != 270)
+                {
+                    transform.eulerAngles = upRotation;
+                    canMove = false;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (transform.eulerAngles.z != 90)
+                {
+                    transform.eulerAngles = downRotation;
+                    canMove = false;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                if (transform.eulerAngles.z != 180)
+                {
+                    transform.eulerAngles = rightRotation;
+                    canMove = false;
+                }
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (transform.eulerAngles.z != 270)
-            {
-                transform.eulerAngles = upRotation;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (transform.eulerAngles.z != 90)
-            {
-                transform.eulerAngles = downRotation;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (transform.eulerAngles.z != 180)
-            {
-                transform.eulerAngles = rightRotation;
-            }
-        }
     }
 
     void WrapScript()

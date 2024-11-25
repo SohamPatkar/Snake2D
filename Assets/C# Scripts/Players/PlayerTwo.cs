@@ -12,6 +12,7 @@ public class PlayerTwo : MonoBehaviour
     [Header("Score Manager")]
     [SerializeField] private ScoreManager scoreManager;
     private float timer, scoreToadd;
+    private bool canMove;
     private Vector3 leftRotation, rightRotation, upRotation, downRotation;
     private List<Transform> snakeBodyParts = new List<Transform>();
     private int score;
@@ -47,6 +48,8 @@ public class PlayerTwo : MonoBehaviour
     {
         if (Mathf.Round(timer) == 1)
         {
+            canMove = true;
+
             Vector3 previousPosition = transform.position;
 
             transform.Translate(Vector3.right * speed);
@@ -62,36 +65,42 @@ public class PlayerTwo : MonoBehaviour
             }
             timer = 0;
         }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (canMove)
         {
-            if (transform.eulerAngles.z != 0)
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                transform.eulerAngles = leftRotation;
+                if (transform.eulerAngles.z != 0)
+                {
+                    transform.eulerAngles = leftRotation;
+                    canMove = false;
+                }
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            if (transform.eulerAngles.z != 270)
+            if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                transform.eulerAngles = upRotation;
+                if (transform.eulerAngles.z != 270)
+                {
+                    transform.eulerAngles = upRotation;
+                    canMove = false;
+                }
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            if (transform.eulerAngles.z != 90)
+            if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                transform.eulerAngles = downRotation;
+                if (transform.eulerAngles.z != 90)
+                {
+                    transform.eulerAngles = downRotation;
+                    canMove = false;
+                }
             }
-        }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            if (transform.eulerAngles.z != 180)
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                transform.eulerAngles = rightRotation;
+                if (transform.eulerAngles.z != 180)
+                {
+                    transform.eulerAngles = rightRotation;
+                    canMove = false;
+                }
             }
         }
     }
