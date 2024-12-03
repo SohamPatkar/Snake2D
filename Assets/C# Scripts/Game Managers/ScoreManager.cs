@@ -7,9 +7,18 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText, scoreTwo, playerWon;
     [Header("Game Over")]
     [SerializeField] private GameObject gameOverScreen;
-
+    private static ScoreManager instance;
+    public static ScoreManager Instance { get { return instance; } }
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         gameOverScreen.SetActive(false);
     }
 
@@ -19,10 +28,11 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = "Player Score: " + 0;
     }
 
-    public void PlayerWon(GameObject player)
+    public void PlayerWon(PlayerType playerType)
     {
-        playerWon.text = player.name + " Won";
+        playerWon.text = playerType.ToString() + " Won";
         gameOverScreen.SetActive(true);
+        Time.timeScale = 0;
     }
 
     public void GameOver()

@@ -5,11 +5,11 @@ public class GameManager : MonoBehaviour
 {
     [Header("Consumables")]
     [SerializeField] private GameObject[] consumables, powerups;
-
     [Header("Spawn Variables")]
     [SerializeField] private int spawnRate, spawnRatepowerups;
-
-    private SnakeMovement snakeMovement;
+    [Header("Scripts")]
+    [SerializeField] private PlayerOne playerOne;
+    [SerializeField] private PlayerTwo playerTwo;
     private Vector3 randomSpawnCoord;
     private GameObject consumableToSpawn, powerupsToSpawn;
     private static GameManager instance;
@@ -30,23 +30,24 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InvokeRepeating("SpawnConsumables", 3, spawnRate);
-        if (SceneManager.GetActiveScene().name == "Coop")
-        {
-            InvokeRepeating("SpawnPowerUps", 3, spawnRatepowerups);
-        }
-        snakeMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<SnakeMovement>();
+        InvokeRepeating("SpawnPowerUps", 3, spawnRatepowerups);
     }
 
-    private void SpawnConsumables()
+    private Vector3 ReturnRange()
     {
         randomSpawnCoord.x = Random.Range(-7, 7);
         randomSpawnCoord.y = Random.Range(-4, 4);
         randomSpawnCoord.z = 0;
 
+        return randomSpawnCoord;
+    }
+
+    private void SpawnConsumables()
+    {
         int i = Random.Range(0, consumables.Length);
         consumableToSpawn = consumables[i];
 
-        if (snakeMovement.ReturnSnakeLength() <= 1)
+        if (SnakeMovement.Instance.ReturnSnakeLength(playerOne.snakeBodyParts) <= 1)
         {
             foreach (var consumable in consumables)
             {
@@ -56,18 +57,18 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            consumableToSpawn = consumables[i];
+        }
 
-        Instantiate(consumableToSpawn, randomSpawnCoord, Quaternion.identity);
+        Instantiate(consumableToSpawn, ReturnRange(), Quaternion.identity);
     }
 
     private void SpawnPowerUps()
     {
-        randomSpawnCoord.x = Random.Range(-7, 7);
-        randomSpawnCoord.y = Random.Range(-4, 4);
-        randomSpawnCoord.z = 0;
-
         int i = Random.Range(0, powerups.Length);
         powerupsToSpawn = powerups[i];
-        Instantiate(powerupsToSpawn, randomSpawnCoord, Quaternion.identity);
+        Instantiate(powerupsToSpawn, ReturnRange(), Quaternion.identity);
     }
 }

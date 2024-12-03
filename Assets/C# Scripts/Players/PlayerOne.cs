@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 
-public class PlayerTwo : SnakeMovement
+public class PlayerOne : SnakeMovement
 {
     [Header("Player Type")]
     [SerializeField] public PlayerType playerType;
@@ -46,7 +45,7 @@ public class PlayerTwo : SnakeMovement
         movementSpeed = 0.5f;
         score = 0;
         timer = 0;
-        playerType = PlayerType.PlayerTwo;
+        playerType = PlayerType.PlayerOne;
         transform.eulerAngles = new Vector3(0, 0, 0);
         snakeBodyParts.Add(transform);
     }
@@ -55,7 +54,7 @@ public class PlayerTwo : SnakeMovement
     {
         if (canMove)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.A))
             {
                 if (transform.eulerAngles.z != 0)
                 {
@@ -64,7 +63,7 @@ public class PlayerTwo : SnakeMovement
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.W))
             {
                 if (transform.eulerAngles.z != 270)
                 {
@@ -73,7 +72,7 @@ public class PlayerTwo : SnakeMovement
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.S))
             {
                 if (transform.eulerAngles.z != 90)
                 {
@@ -82,7 +81,7 @@ public class PlayerTwo : SnakeMovement
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.D))
             {
                 if (transform.eulerAngles.z != 180)
                 {
@@ -95,13 +94,17 @@ public class PlayerTwo : SnakeMovement
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == playerBodyPart.gameObject.layer)
+        if (other.gameObject.layer == playerBodyPart.layer)
         {
             Death(gameObject);
         }
-        else if (other.gameObject.layer == 9)
+        else if (other.gameObject.layer == 10)
         {
             Kill(other.gameObject);
+        }
+        else
+        {
+            Debug.Log(other.gameObject.name);
         }
     }
 }

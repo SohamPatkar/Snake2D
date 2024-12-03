@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 1854705054420262632}
   - component: {fileID: 2512414797543576083}
   - component: {fileID: 8942491165617661405}
-  m_Layer: 6
-  m_Name: SnakeBody@1080x
+  m_Layer: 9
+  m_Name: Player One Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
