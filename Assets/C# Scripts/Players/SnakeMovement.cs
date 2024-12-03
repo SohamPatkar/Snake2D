@@ -2,232 +2,246 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerType
+{
+    PlayerOne,
+    PlayerTwo
+}
+
 public class SnakeMovement : MonoBehaviour
 {
     [Header("Speed of Snake")]
     [SerializeField] private int speed;
-    [Header("Body Part")]
-    [SerializeField] private GameObject bodyPart;
-    [Header("Score Manager")]
-    [SerializeField] private ScoreManager scoreManager;
-    private float timer, scoreToadd;
-    private bool canMove;
-    private Vector3 leftRotation, rightRotation, upRotation, downRotation;
-    private List<Transform> snakeBodyParts = new List<Transform>();
-    private int score;
+    [Header("Players")]
+    [SerializeField] protected PlayerOne playerOne;
+    [SerializeField] protected PlayerTwo playerTwo;
+    [SerializeField] private GameObject playerOneObject, playerTwoObject;
+    protected Vector3 leftRotation, rightRotation, upRotation, downRotation;
+    private bool isPlayerOne;
+    private static SnakeMovement instance;
+    public static SnakeMovement Instance { get { return instance; } }
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         InitializeGame();
     }
 
-    private void Update()
-    {
-        timer += Time.deltaTime;
-        Movement();
-    }
-
-    private void FixedUpdate()
-    {
-        WrapScript();
-    }
-
     void InitializeGame()
     {
-        transform.eulerAngles = Vector3.zero;
         leftRotation = new Vector3(0, 0, 180);
         rightRotation = new Vector3(0, 0, 0);
         upRotation = new Vector3(0, 0, 90);
         downRotation = new Vector3(0, 0, 270);
         speed = 1;
-        scoreToadd = 10;
-        snakeBodyParts.Add(transform);
     }
 
-    void Movement()
+    public void Movement(Transform player, List<Transform> bodyparts)
     {
-        if (Mathf.Round(timer) == 1)
+        Vector3 previousPosition = player.position;
+
+        foreach (Transform bodyPart in bodyparts)
         {
-            canMove = true;
-
-            Vector3 previousPosition = transform.position;
-
-            transform.Translate(Vector3.right * speed);
-
-            foreach (Transform bodyPart in snakeBodyParts)
+            if (bodyPart != gameObject.transform)
             {
-                if (bodyPart != transform)
-                {
-                    Vector3 tempPosition = bodyPart.position;
-                    bodyPart.position = previousPosition;
-                    previousPosition = tempPosition;
-                }
-            }
-            timer = 0;
-        }
-        if (canMove)
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                if (transform.eulerAngles.z != 0)
-                {
-                    transform.eulerAngles = leftRotation;
-                    canMove = false;
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                if (transform.eulerAngles.z != 270)
-                {
-                    transform.eulerAngles = upRotation;
-                    canMove = false;
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                if (transform.eulerAngles.z != 90)
-                {
-                    transform.eulerAngles = downRotation;
-                    canMove = false;
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                if (transform.eulerAngles.z != 180)
-                {
-                    transform.eulerAngles = rightRotation;
-                    canMove = false;
-                }
+                Vector3 tempPosition = bodyPart.position;
+                bodyPart.position = previousPosition;
+                previousPosition = tempPosition;
             }
         }
 
+        player.Translate(Vector3.right * speed);
     }
 
-    void WrapScript()
+    public virtual void TakeTurns() { }
+
+    public void WrapScript(GameObject player)
     {
         //Vertical Wrapping
-        if (transform.position.y > 5)
+        if (player.transform.position.y > 5)
         {
-            transform.position = new Vector3(transform.position.x, -5f, 0);
+            player.transform.position = new Vector3(player.transform.position.x, -5f, 0);
         }
-        else if (transform.position.y < -5)
+        else if (player.transform.position.y < -5)
         {
-            transform.position = new Vector3(transform.position.x, 5f, 0);
+            player.transform.position = new Vector3(player.transform.position.x, 5f, 0);
         }
 
         //Horizontal Wrapping
-        if (transform.position.x > 9)
+        if (player.transform.position.x > 9)
         {
-            transform.position = new Vector3(-9f, transform.position.y, 0);
+            player.transform.position = new Vector3(-9f, player.transform.position.y, 0);
         }
-        else if (transform.position.x < -9)
+        else if (player.transform.position.x < -9)
         {
-            transform.position = new Vector3(9f, transform.position.y, 0);
+            player.transform.position = new Vector3(9f, player.transform.position.y, 0);
         }
     }
 
-    public void AddBodyPart()
+    public void AddBodyPart(List<Transform> snakeBodyParts, GameObject playerOneBody, Transform playerOne)
     {
         Vector3 newPartPosition = snakeBodyParts[snakeBodyParts.Count - 1].transform.position;
-        Debug.Log("Space pressed");
-        Transform partToadd = Instantiate(bodyPart, newPartPosition, transform.rotation).transform;
+        Transform partToadd = Instantiate(playerOneBody, newPartPosition, playerOne.transform.rotation).transform;
         StartCoroutine(DelayForCollisions(partToadd));
         snakeBodyParts.Add(partToadd);
     }
 
-    public void RemoveBodyPart()
+    public void RemoveBodyPart(List<Transform> snakeBodyParts)
     {
         GameObject tailDestroy = snakeBodyParts[snakeBodyParts.Count - 1].gameObject;
         snakeBodyParts.Remove(snakeBodyParts[snakeBodyParts.Count - 1]);
         Destroy(tailDestroy);
     }
 
-    public void Shield()
+    public int ReturnSnakeLength(List<Transform> bodyparts)
     {
-        foreach (Transform part in snakeBodyParts)
+        return bodyparts.Count;
+    }
+
+    public virtual void AddScore(GameObject player)
+    {
+        if (player.GetComponent<PlayerOne>() != null)
         {
-            BoxCollider2D box = part.gameObject.GetComponent<BoxCollider2D>();
-            box.excludeLayers = 1 << 0;
-            StartCoroutine(DelayForShield(box));
+            playerOne.score += (int)playerOne.scoreToadd;
+            ScoreManager.Instance.ScoreDisplay(playerOne.score);
+        }
+        else if (player.GetComponent<PlayerTwo>() != null)
+        {
+            playerTwo.score += (int)playerOne.scoreToadd;
+            ScoreManager.Instance.PlayerTwoScoreDisplay(playerTwo.score);
         }
     }
 
-    public int ReturnSnakeLength()
+    public void SpeedMultiplierEffect(GameObject player)
     {
-        return snakeBodyParts.Count;
-    }
-
-    public void ScoreToAdd()
-    {
-        scoreToadd = scoreToadd * 2;
-        StartCoroutine(ScoreMultiplierCooldown());
-    }
-
-    public void AddScore()
-    {
-        score += (int)scoreToadd;
-        scoreManager.ScoreDisplay(score);
-    }
-
-    public void SubtractScore()
-    {
-        score -= 10;
-        if (score <= 0)
+        if (player.GetComponent<PlayerOne>() != null)
         {
-            score = 0;
+            playerOne.movementSpeed = 0.1f;
+            isPlayerOne = true;
         }
-        scoreManager.ScoreDisplay(score);
+        else if (player.GetComponent<PlayerTwo>() != null)
+        {
+            playerTwo.movementSpeed = 0.1f;
+            isPlayerOne = false;
+        }
+        Invoke(nameof(SpeedCooldown), 5f);
     }
 
-    public int ReturnScore()
+    void SpeedCooldown()
     {
-        return score;
+        if (isPlayerOne)
+        {
+            playerOne.movementSpeed = 0.5f;
+        }
+        else
+        {
+            playerTwo.movementSpeed = 0.5f;
+        }
     }
 
-    public void EmptyList()
+    public void ScoreMultiplierEffect(GameObject player)
     {
-        foreach (var part in snakeBodyParts)
+        if (player.GetComponent<PlayerOne>() != null)
+        {
+            playerOne.scoreToadd *= 2;
+            isPlayerOne = true;
+            StartCoroutine(MultiplierCooldown(isPlayerOne));
+        }
+        else if (player.GetComponent<PlayerTwo>() != null)
+        {
+            playerTwo.scoreToadd *= 2;
+            isPlayerOne = false;
+            StartCoroutine(MultiplierCooldown(isPlayerOne));
+        }
+    }
+
+    IEnumerator MultiplierCooldown(bool isPlayerOne)
+    {
+        yield return new WaitForSeconds(5f);
+        if (isPlayerOne)
+        {
+            playerOne.scoreToadd = 10;
+        }
+        else
+        {
+            playerTwo.scoreToadd = 10;
+        }
+    }
+
+    public void EmptyList(List<Transform> bodyparts)
+    {
+        foreach (var part in bodyparts)
         {
             Destroy(part.gameObject);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void Death(GameObject player)
     {
-        if (other.gameObject.layer == gameObject.layer)
-        {
-            scoreManager.GameOver();
-            SoundManager.Instance.PlaySfx(SoundType.Death);
-            Destroy(gameObject, 0.2f);
-        }
-        else if (other.gameObject.layer == 8)
-        {
-            PlayerTwo playerTwo = GameObject.FindGameObjectWithTag("PlayerTwo").GetComponent<PlayerTwo>();
-            playerTwo.EmptyList();
-            scoreManager.PlayerWon(gameObject);
-            SoundManager.Instance.PlaySfx(SoundType.Death);
-            Destroy(GameObject.FindGameObjectWithTag("PlayerTwo").gameObject);
-        }
+        SoundManager.Instance.PlaySfx(SoundType.Death);
+        ScoreManager.Instance.GameOver();
+        Destroy(player, 0.2f);
     }
 
-    IEnumerator ScoreMultiplierCooldown()
+    public void Kill(GameObject other)
     {
-        yield return new WaitForSeconds(5f);
-        scoreToadd = 10;
+        if (other.layer == 9)
+        {
+            ScoreManager.Instance.PlayerWon(PlayerType.PlayerTwo);
+        }
+        else if (other.layer == 10)
+        {
+            ScoreManager.Instance.PlayerWon(PlayerType.PlayerOne);
+        }
+        Destroy(other);
     }
 
-    IEnumerator DelayForShield(BoxCollider2D boxCollider)
+    public void Shield(GameObject player)
+    {
+        if (player.gameObject.GetComponent<PlayerOne>() != null)
+        {
+            Physics2D.IgnoreLayerCollision(playerOneObject.layer, playerOne.playerBodyPart.layer, true);
+        }
+        else if (player.GetComponent<PlayerTwo>() != null)
+        {
+            Physics2D.IgnoreLayerCollision(playerTwoObject.layer, playerTwo.playerBodyPart.layer, true);
+        }
+        StartCoroutine(ShieldCoolDown(player));
+    }
+
+    IEnumerator ShieldCoolDown(GameObject player)
     {
         yield return new WaitForSeconds(5f);
-        boxCollider.excludeLayers = 1 << 3;
-
+        if (player.gameObject == playerOne.gameObject)
+        {
+            Physics2D.IgnoreLayerCollision(playerOneObject.layer, playerOne.playerBodyPart.layer, false);
+        }
+        else if (player.gameObject == playerTwo.gameObject)
+        {
+            Physics2D.IgnoreLayerCollision(playerTwoObject.layer, playerTwo.playerBodyPart.layer, false);
+        }
     }
 
     IEnumerator DelayForCollisions(Transform part)
     {
         yield return new WaitForSeconds(1.2f);
-        part.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+        if (part != null)
+        {
+            part.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+        }
+        else
+        {
+            Debug.Log("null");
+        }
     }
 }

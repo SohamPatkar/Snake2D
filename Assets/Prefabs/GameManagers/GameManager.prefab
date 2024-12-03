@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &609947236309206359
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8769842466362354958}
+  - component: {fileID: 1215672778658847490}
+  - component: {fileID: 6561876666047610878}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8769842466362354958
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609947236309206359}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.8188622, y: 0.29687086, z: 0.008665245}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1215672778658847490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609947236309206359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cacc4fbb9596f542a9a1cd45c3eb9ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  consumables:
+  - {fileID: 6836896891894758540, guid: d97a453875320fd4d89aef9c61523f30, type: 3}
+  - {fileID: 2233276283299168431, guid: 38f649ab0fdf42140977bac47c8d61cb, type: 3}
+  powerups:
+  - {fileID: 3769510594706417740, guid: 5d1ca7f6e54d1984faa9d5a837e16fe4, type: 3}
+  - {fileID: 7886631966752959683, guid: f26ae7a4c0cb19c48af743847f5c1dc6, type: 3}
+  - {fileID: 1995695668924395264, guid: dc5bc5213747f2347a53a17f3e1eaaa0, type: 3}
+  spawnRate: 3
+  spawnRatepowerups: 5
+  playerOne: {fileID: 0}
+  playerTwo: {fileID: 0}
+--- !u!114 &6561876666047610878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609947236309206359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6fb2fbc9372be8478e7e0b0ab2a541b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  scoreManager: {fileID: 0}
+  playerOne: {fileID: 0}
+  playerTwo: {fileID: 0}
